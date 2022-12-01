@@ -29,7 +29,7 @@
     "express": "^4.18.2",
     "googleapis": "^109.0.1",
     "jsonwebtoken": "^8.5.1",
-    "mailer": "^0.6.7",
+    "mailer": "^0.6.6",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "mustache": "^4.2.0",
@@ -37,6 +37,6 @@
     "nodemailer": "^6.8.0",
     "pg": "^8.8.0",
     "redis": "^4.5.1",
-    "vercel": "^28.7.0"
+    "vercel": "^19.1.2"
   }
 }
