@@ -4,7 +4,7 @@ const postgreDb = require("../config/postgre");
 const getUserById = (id) => {
   return new Promise((resolve, reject) => {
     const query =
-      "select id, role, firstName, lastName, phoneNumber, email, password, image, point from users where id = $1";
+      "select id, role, first_name, last_name, phone_number, email, password, image, status, point, pin_activation, verify_changepwd from users where id = $1";
 
     postgreDb.query(query, [id], (error, result) => {
       if (error) {
@@ -21,6 +21,20 @@ const getUserByEmail = (email) => {
     const query = "select * from users where email = $1";
 
     postgreDb.query(query, [email], (error, result) => {
+      if (error) {
+        console.log(error);
+        return reject(error);
+      }
+      return resolve(result);
+    });
+  });
+};
+
+const getUserByPin = (pin) => {
+  return new Promise((resolve, reject) => {
+    const query = "select * from users where pin_activation = $1";
+
+    postgreDb.query(query, [pin], (error, result) => {
       if (error) {
         console.log(error);
         return reject(error);
@@ -51,24 +65,74 @@ const register = (body) => {
   });
 };
 
-const updateStatus = (status, id) => {
+const updateStatus = (setData, id) => {
   return new Promise((resolve, reject) => {
-    const query = " update users set status = $1 where id = $2";
-    postgreDb.query(query, [status, id], (error, result) => {
+    console.log(setData);
+    const query =
+      " update users set status = $1, pin_activation = $2 where id = $3";
+    postgreDb.query(
+      query,
+      [setData.status, setData.pin_activation, id],
+      (error, result) => {
+        if (error) {
+          console.log(error);
+          return reject(error);
+        }
+        resolve(result);
+      }
+    );
+  });
+};
+
+const insertWhiteListToken = (token) => {
+  return new Promise((resolve, reject) => {
+    const query = " insert into white_list_token (token)values ($1)";
+    postgreDb.query(query, [token], (error, result) => {
       if (error) {
         console.log(error);
         return reject(error);
       }
       resolve(result);
-    })
+    });
+  });
+};
+
+const checkWhiteListToken = (token) => {
+  return new Promise((resolve, reject) => {
+    const query = "select * from white_list_token where token = $1";
+    postgreDb.query(query, [token], (error, result) => {
+      if (error) {
+        console.log(error);
+        return reject(error);
+      }
+      resolve(result);
+    });
+  });
+};
+
+const deleteWhiteListToken = (token) => {
+  return new Promise((resolve, reject) => {
+    const query = "delete from white_list_token where token = $1";
+
+    postgreDb.query(query, [token], (error, result) => {
+      if (error) {
+        console.log(error);
+        return reject(error);
+      }
+      resolve(result);
+    });
   });
 };
 
 const userRepo = {
   getUserById,
   getUserByEmail,
+  getUserByPin,
   register,
   updateStatus,
+  insertWhiteListToken,
+  checkWhiteListToken,
+  deleteWhiteListToken,
 };
 
 module.exports = userRepo;
