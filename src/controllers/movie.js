@@ -9,7 +9,6 @@ const createMovie = async (req, res) => {
       return resHelper.error(res, error.status, error);
     }
   };
-
 const movieControllers = {
     createMovie
 }

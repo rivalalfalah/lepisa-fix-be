@@ -1,7 +1,8 @@
 const movieRouter = require("express").Router();
 const movieController = require("../controllers/movie");
-const cloudinary = require("../middlewares/cloudinary");
+const cloudinary = require("../middleware/cloudinary");
+const singleUpload = require("../middleware/uploadSingle")
 
-movieRouter.post("add",cloudinary,movieController.createMovie)
+movieRouter.post("/add",singleUpload,cloudinary,movieController.createMovie)
 
 module.exports = movieRouter

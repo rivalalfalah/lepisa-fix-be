@@ -1,4 +1,4 @@
-const cloudinary = require("../config/clodunary");
+const cloudinary = require("../config/cloudinary");
 const dataUriParser = require("datauri/parser");
 const path = require("path");
 
@@ -12,7 +12,7 @@ const uploaderCloudinary = async (req, res, next) => {
   const datauri = parser.format(ext, buffer);
   const clodunaryOpt = {
     public_id: `${Math.floor(Math.random() * 10e9)}`,
-    folder: "Spectrum",
+    folder: "lepisa",
   };
   try {
     const result = await cloudinary.uploader.upload(
