@@ -19,7 +19,7 @@ client.on("end", () => {
   console.log("Client disconnected from redis");
 });
 
-process.on("SIGINT", () => {
+client.on("SIGINT", () => {
   client.quit();
 });
 
