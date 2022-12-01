@@ -44,9 +44,9 @@ const auth = {
         buttonUrl: `http://localhost:3000/auth/verify/${setData.pinActivation}`,
       };
 
-      const response = await sendMail(setSendEmail);
+      await sendMail(setSendEmail);
 
-      console.log("response", response);
+      // console.log("response", response);
       return sendResponse.response(res, {
         status: 200,
         data: {
@@ -117,10 +117,19 @@ const auth = {
       if (checkEmail.rows.length === 0) {
         return sendResponse.response(res, {
           status: 400,
-          message: "Your email has been registered",
+          message: "Email not found",
         });
       }
-      console.log("cek email", checkEmail);
+      // console.log("cek email", checkEmail.rows);
+
+      const checkStatus = checkEmail.rows[0].status;
+      console.log(checkStatus);
+      if (checkStatus !== "active") {
+        return sendResponse.response(res, {
+          status: 400,
+          message: "You have verify your account!",
+        });
+      }
 
       const hashedPassword = checkEmail.rows[0].password;
       const checkPassword = await bcrypt.compare(
@@ -171,6 +180,98 @@ const auth = {
         status: 200,
         data: result.rows[0],
         message: "Logout success",
+      });
+    } catch (error) {
+      console.log(error);
+      return sendResponse.response(res, {
+        error,
+        status: 500,
+        message: "Internal server error",
+      });
+    }
+  },
+
+  forgotPassword: async (req, res) => {
+    try {
+      // validasi
+      let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
+      if (regex.test(req.body.email) === false) {
+        return sendResponse.response(res, {
+          status: 400,
+          message: "Format email is wrong",
+        });
+      }
+      const checkEmail = await userRepo.getUserByEmail(req.body.email);
+      if (checkEmail.rows.length === 0) {
+        return sendResponse.response(res, {
+          status: 400,
+          message: "Email not found",
+        });
+      }
+      
+      const generateOTP = Math.floor(Math.random() * 1000000);
+      // console.log(generateOTP);
+      // console.log("cek email", checkEmail.rows);
+      await userRepo.updateOTPUser(generateOTP, req.body.email);
+      
+      const setSendEmail = {
+        to: req.body.email,
+        subject: " Reset Pasword",
+        name: checkEmail.rows[0].email,
+        template: "forgotEmail.html",
+        otp: `${generateOTP}`,
+      };
+
+      // console.log(setSendEmail);
+      
+      const response = await sendMail(setSendEmail);
+      console.log(response);
+      
+
+      return sendResponse.response(res, {
+        status: 200,
+        message: "Please check your email to reset your password!",
+      });
+    } catch (error) {
+      console.log(error);
+      return sendResponse.response(res, {
+        error,
+        status: 500,
+        message: "Internal server error",
+      });
+    }
+  },
+
+  resetPassword: async (req, res) => {
+    const { verify_changepwd, new_password, confirm_password } = req.body;
+    try {
+      const result = await userRepo.getUserByOTP(
+        verify_changepwd,
+        new_password,
+        confirm_password
+      );
+      if (result.rows.length === 0) {
+        return sendResponse.response(res, {
+          status: 400,
+          message: "OTP is wrong",
+        });
+      }
+
+      if (new_password !== confirm_password) {
+        return sendResponse.response(res, {
+          status: 400,
+          message: "Password didn't match",
+        });
+      }
+
+      const passwordHash = await bcrypt.hash(new_password, 10);
+      const email = result.rows[0].email;
+      const setOTP = null;
+
+      await userRepo.updateUserByOTP(passwordHash, setOTP, email);
+      return sendResponse.response(res, {
+        status: 200,
+        message: "Password has been reset",
       });
     } catch (error) {
       console.log(error);

@@ -124,6 +124,47 @@ const deleteWhiteListToken = (token) => {
   });
 };
 
+const updateOTPUser = (generateOTP, email) => {
+  return new Promise((resolve, reject) => {
+    const query = "update users set verify_changepwd = $1 where email = $2";
+    postgreDb.query(query, [generateOTP, email], (error, result) => {
+      if (error) {
+        console.log(error);
+        return reject(error);
+      }
+      resolve(result);
+    });
+  });
+};
+
+const updateUserByOTP = (password, OTP, email) => {
+  return new Promise((resolve, reject) => {
+    const query =
+      "update users set password = $1, verify_changepwd = $2 where email = $3";
+
+    postgreDb.query(query, [password, OTP, email], (error, result) => {
+      if (error) {
+        console.log(error);
+        return reject(error);
+      }
+      resolve(result);
+    });
+  });
+};
+
+const getUserByOTP = (OTP) => {
+  return new Promise((resolve, reject) => {
+    const query = "select * from users where verify_changepwd = $1";
+    postgreDb.query(query, [OTP], (error, result) => {
+      if (error) {
+        console.log(error);
+        return reject(error);
+      }
+      resolve(result);
+    });
+  });
+};
+
 const userRepo = {
   getUserById,
   getUserByEmail,
@@ -133,6 +174,9 @@ const userRepo = {
   insertWhiteListToken,
   checkWhiteListToken,
   deleteWhiteListToken,
+  updateOTPUser,
+  updateUserByOTP,
+  getUserByOTP,
 };
 
 module.exports = userRepo;
