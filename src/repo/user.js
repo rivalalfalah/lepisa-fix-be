@@ -16,7 +16,7 @@ const getUserById = (id) => {
   });
 };
 
-const getUserByEmailAndPhone = (email) => {
+const getUserByEmail = (email) => {
   return new Promise((resolve, reject) => {
     const query = "select * from users where email = $1";
 
@@ -66,7 +66,7 @@ const updateStatus = (status, id) => {
 
 const userRepo = {
   getUserById,
-  getUserByEmailAndPhone,
+  getUserByEmail,
   register,
   updateStatus,
 };

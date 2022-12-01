@@ -15,7 +15,7 @@ const auth = {
           message: "Format email wrong",
         });
       }
-      const checkEmail = await userRepo.getUserByEmailAndPhone(req.body.email);
+      const checkEmail = await userRepo.getUserByEmail(req.body.email);
       if (checkEmail.rows.length > 0) {
         return sendResponse.response(res, {
           status: 400,
@@ -29,7 +29,7 @@ const auth = {
       console.log(pinActivation);
 
       const setData = {
-          email: req.body.email,
+        email: req.body.email,
         password: passwordHash,
         pinActivation: pinActivation,
       };
@@ -41,7 +41,7 @@ const auth = {
         subject: "Email Verification !",
         name: req.body.firstName,
         template: "verificationEmail.html",
-        buttonUrl: `http://localhost:9090/auth/verify/${setData.pinActivation}`,
+        buttonUrl: `http://localhost:8080/auth/verify/${setData.pinActivation}`,
       };
 
       const response = await sendMail(setSendEmail);
@@ -54,8 +54,26 @@ const auth = {
           email: req.body.email,
           verify_pin: pinActivation,
         },
-        message: "Registere success! Please check your email to verify your account.",
+        message:
+          "Register success! Please check your email to verify your account.",
       });
+    } catch (error) {
+      console.log(error);
+      return sendResponse.response(res, {
+        error,
+        status: 500,
+        message: "Internal server error",
+      });
+    }
+  },
+
+  updateStatus: async (req, res) => {
+    try {
+      const {id} = req.params;
+      const checkId = await userRepo.getUserById(id);
+      if (checkId.length < 1) {
+        return
+      }
     } catch (error) {
       console.log(error);
       return sendResponse.response(res, {
