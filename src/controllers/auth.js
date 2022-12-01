@@ -3,7 +3,6 @@ const sendResponse = require("../helpers/sendResponse");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const userRepo = require("../repo/user");
-const redis = require("../config/redis")
 
 const auth = {
   register: async (req, res) => {
@@ -42,7 +41,7 @@ const auth = {
         subject: "Email Verification !",
         name: req.body.first_name,
         template: "verificationEmail.html",
-        buttonUrl: `http://localhost:8080/auth/verify/${setData.pinActivation}`,
+        buttonUrl: `http://localhost:3000/auth/verify/${setData.pinActivation}`,
       };
 
       const response = await sendMail(setSendEmail);
@@ -122,6 +121,7 @@ const auth = {
         });
       }
       console.log("cek email", checkEmail);
+
       const hashedPassword = checkEmail.rows[0].password;
       const checkPassword = await bcrypt.compare(
         req.body.password,
@@ -148,15 +148,9 @@ const auth = {
       });
 
       await userRepo.insertWhiteListToken(token);
-      const test = await redis.setEx(
-        `getToken: ${payload.id}`,
-        10 * 24 * 60 * 60,
-        token
-      );
-      console.log(test);
       return sendResponse.response(res, {
         status: 200,
-        data: { name: payload.email, role: payload.role, token, test },
+        data: { name: payload.email, role: payload.role, token },
         message: "Login success",
       });
     } catch (error) {
@@ -170,16 +164,14 @@ const auth = {
   },
 
   logout: async (req, res) => {
+    const token = req.header("x-access-token");
     try {
-      const id = req.userPayload.id;
-      console.log(id);
-      const token = req.header("x-access-token");
-
-      const user = await userRepo.deleteWhiteListToken(token);
-      const test = await redis.del(`getToken: ${id}`);
-      sendResponse.response(res, { status: 200, data: test, message: "Logout success" });
-
-
+      const result = await userRepo.deleteWhiteListToken(token);
+      return sendResponse.response(res, {
+        status: 200,
+        data: result.rows[0],
+        message: "Logout success",
+      });
     } catch (error) {
       console.log(error);
       return sendResponse.response(res, {
@@ -188,7 +180,7 @@ const auth = {
         message: "Internal server error",
       });
     }
-  }
+  },
 };
 
 module.exports = auth;
