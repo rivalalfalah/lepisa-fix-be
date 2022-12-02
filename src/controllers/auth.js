@@ -260,7 +260,7 @@ const auth = {
       if (new_password !== confirm_password) {
         return sendResponse.response(res, {
           status: 400,
-          message: "Password didn't match",
+          message: "Password doesn't match",
         });
       }
 

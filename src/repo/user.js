@@ -4,7 +4,7 @@ const postgreDb = require("../config/postgre");
 const getUserById = (id) => {
   return new Promise((resolve, reject) => {
     const query =
-      "select id, role, first_name, last_name, phone_number, email, password, image, status, point, pin_activation, verify_changepwd from users where id = $1";
+      "select id, role, first_name, last_name, phone_number, email, password, image, status, point, pin_activation, verify_changepwd, created_at, updated_at, deleted_at from users where id = $1";
 
     postgreDb.query(query, [id], (error, result) => {
       if (error) {
@@ -165,6 +165,45 @@ const getUserByOTP = (OTP) => {
   });
 };
 
+const updateProfile = (body, id) => {
+  return new Promise((resolve, reject) => {
+    let query = "update users set ";
+    const values = [];
+    Object.keys(body).forEach((key, idx, array) => {
+      if (idx === array.length - 1) {
+        query += `${key} = $${idx + 1} where id = $${idx + 2}`;
+        values.push(body[key], id);
+        return;
+      }
+      query += `${key} = $${idx + 1}, `;
+      values.push(body[key]);
+    });
+    //   res.json({ query, values });
+    postgreDb
+      .query(query, values)
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((error) => {
+        console.log(error);
+        reject(error);
+      });
+  });
+};
+
+const updatePassword = (id, password) => {
+  return new Promise((resolve, reject) => {
+    const query = "update users set password = $1 where id = $2";
+    postgreDb.query(query, [password, id], (error, result) => {
+      if (error) {
+        console.log(error);
+        return reject(error);
+      }
+      resolve(result);
+    });
+  });
+};
+
 const userRepo = {
   getUserById,
   getUserByEmail,
@@ -177,6 +216,8 @@ const userRepo = {
   updateOTPUser,
   updateUserByOTP,
   getUserByOTP,
+  updateProfile,
+  updatePassword,
 };
 
 module.exports = userRepo;
