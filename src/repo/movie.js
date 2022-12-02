@@ -36,7 +36,7 @@ const createMovie = (req) => {
         console.log(error);
         return reject({ status: 500, msg: "Internal Server Error" });
       }
-      return resolve({ status: 201, msg: "movies created", data:result });
+      return resolve({ status: 201, msg: "movies created", data: result });
     });
   });
 };
@@ -57,6 +57,24 @@ const getMovieDetail = (req) => {
       }
       console.log(result.rows[0]);
       return resolve({ status: 200, data: result.rows[0] });
+    });
+  });
+};
+
+const getMovieByDay = () => {
+  return new Promise((resolve, reject) => {
+    const getQuery =
+      "select movies.tittle,movies.image,category.name,extract(month from now()) as month_now,extract(year from now()) as year_now,extract(day from now()) as day_now,extract(day from movies.release_date) as day,extract(month from movies.release_date)+3 as month,extract(year from movies.release_date) as year from movies inner join category on movies.category_id = category.id where extract(year from now()) <= extract(year from movies.release_date) and extract(month from now()) = extract(month from movies.release_date) ";
+    db.query(getQuery, (error, result) => {
+      if (error) {
+        console.log(error);
+        return reject({
+          status: 500,
+          msg: "internal server error",
+          error,
+        });
+      }
+      return resolve({ status: 200, data: result.rows });
     });
   });
 };
@@ -88,7 +106,8 @@ const addSchedule = (req) => {
 const movieRepo = {
   createMovie,
   getMovieDetail,
-  addSchedule
+  getMovieByDay,
+  addSchedule,
 };
 
 module.exports = movieRepo;

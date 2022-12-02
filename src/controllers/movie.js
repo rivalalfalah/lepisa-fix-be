@@ -29,10 +29,21 @@ const addSchedule = async (req, res) => {
     return resHelper.error(res, error.status, error);
   }
 };
+
+const getMovieDay = async (req, res) => {
+  try {
+    const response = await movieRepo.getMovieByDay();
+    resHelper.success(res, response.status, response);
+  } catch (error) {
+    console.log(error);
+    return resHelper.error(res, error.status, error);
+  }
+};
 const movieControllers = {
   createMovie,
   getMovieDetail,
   addSchedule,
+  getMovieDay
 };
 
 module.exports = movieControllers;
