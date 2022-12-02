@@ -40,6 +40,7 @@ const auth = {
         to: req.body.email,
         subject: "Email Verification !",
         name: req.body.first_name,
+        // template: "verificationEmail.html",
         template: "verificationEmail.html",
         buttonUrl: `http://localhost:3000/auth/verify/${setData.pinActivation}`,
       };
