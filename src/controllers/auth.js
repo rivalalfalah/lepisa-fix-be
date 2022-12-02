@@ -41,7 +41,7 @@ const auth = {
         subject: "Email Verification !",
         name: req.body.first_name,
         template: "verificationEmail.html",
-        buttonUrl: `http://localhost:3000/auth/verify/${setData.pinActivation}`,
+        buttonUrl: `https://lepisa-fix-be.vercel.app/auth/${setData.pinActivation}`,
       };
 
       await sendMail(setSendEmail);
