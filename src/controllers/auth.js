@@ -148,7 +148,7 @@ const auth = {
 
       const payload = {
         id: checkEmail.rows[0].id,
-        name: checkEmail.rows[0].email,
+        email: checkEmail.rows[0].email,
         role: checkEmail.rows[0].role,
       };
 
@@ -160,7 +160,7 @@ const auth = {
       await userRepo.insertWhiteListToken(token);
       return sendResponse.response(res, {
         status: 200,
-        data: { name: payload.email, role: payload.role, token },
+        data: { id: payload.id, email: payload.email, role: payload.role, token },
         message: "Login success",
       });
     } catch (error) {
