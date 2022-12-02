@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
-const fs = require("fs");
+// const fs = require("fs");
+const { readFileSync } = require("fs");
 const mustache = require("mustache");
 
 const clientId = process.env.MAIL_CLIENT_ID;
@@ -30,11 +31,11 @@ module.exports = {
           },
         });
   
-        const fileTemplate = fs.readFileSync(
+        const fileTemplate = readFileSync(
           `src/templates/email/${data.template}`,
           "utf8"
         );
-          console.log(fileTemplate);
+          // console.log(fileTemplate);
   
         const mailOptions = {
           from: '"Tickitz 👻" <dian30kartika@gmail.com>', // sender address

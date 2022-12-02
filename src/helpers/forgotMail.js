@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
-const fs = require("fs");
+// const fs = require("fs");
+const { readFileSync } = require("fs");
 const mustache = require("mustache");
 
 const clientId = process.env.MAIL_CLIENT_ID;
@@ -30,7 +31,7 @@ module.exports = {
         },
       });
 
-      const fileTemplate = fs.readFileSync(
+      const fileTemplate = readFileSync(
         `src/template/email/${data.template}`
       );
 
