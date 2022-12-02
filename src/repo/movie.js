@@ -112,7 +112,7 @@ const getMovieByMonth = (req) => {
   return new Promise((resolve, reject) => {
     const { month } = req.params;
     const getQuery =
-      "select movies.id,movies.tittle,movies.image,category.name,extract(day from movies.release_date) as day_release,extract(month from movies.release_date) as month_release,extract(year from movies.release_date) as year_release from movies inner join category on movies.category_id = category.id where extract(month from movies.release_date)  = $1 and  extract(year from now()) < extract(year from movies.release_date) limit 5";
+      "select movies.id,movies.tittle,movies.image,category.name,extract(day from movies.release_date) as day_release,extract(month from movies.release_date) as month_release,extract(year from movies.release_date) as year_release from movies inner join category on movies.category_id = category.id where extract(month from movies.release_date)  = $1 and  extract(year from now()) < extract(year from movies.release_date) ";
     db.query(getQuery, [month], (error, result) => {
       if (error) {
         console.log(error);
