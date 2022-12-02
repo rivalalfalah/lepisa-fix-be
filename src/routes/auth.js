@@ -11,7 +11,7 @@ const {
 } = require("../controllers/auth");
 
 authRouter.post("/register/", register);
-authRouter.get("/:key", updateStatus);
+authRouter.get("/verify/:key", updateStatus);
 authRouter.post("/login", login);
 authRouter.delete("/logout", isLogin, logout);
 authRouter.patch("/reset-password", resetPassword);

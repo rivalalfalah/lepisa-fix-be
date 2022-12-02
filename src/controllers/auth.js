@@ -42,7 +42,7 @@ const auth = {
         name: req.body.first_name,
         // template: "verificationEmail.html",
         template: "verificationEmail.html",
-        buttonUrl: `https://lepisa-fix-be.vercel.app/api/auth/${setData.pinActivation}`,
+        buttonUrl: `https://lepisa-fe.vercel.app/api/auth/${setData.pinActivation}`,
       };
 
       await sendMail(setSendEmail);
