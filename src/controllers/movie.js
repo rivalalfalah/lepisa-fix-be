@@ -43,7 +43,7 @@ const getMovieDay = async (req, res) => {
 
 const getMovieMonth = async (req, res) => {
   try {
-    const response = await movieRepo.getMovieByDay(req);
+    const response = await movieRepo.getMovieByMonth(req);
     resHelper.success(res, response.status, response);
   } catch (error) {
     console.log(error);
