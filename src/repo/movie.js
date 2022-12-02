@@ -51,15 +51,19 @@ const getMovieDetail = (req) => {
         console.log(error);
         return reject({ status: 500, msg: "internal server error" });
       }
-      console.log(result.rows[0])
-      return resolve({ status: 200, data:result.rows[0] });
+
+      if (!result.rows[0]) {
+        return reject({ status: 404,msg:"data not found" });
+      }
+      console.log(result.rows[0]);
+      return resolve({ status: 200, data: result.rows[0] });
     });
   });
 };
 
 const movieRepo = {
   createMovie,
-  getMovieDetail
+  getMovieDetail,
 };
 
 module.exports = movieRepo;
