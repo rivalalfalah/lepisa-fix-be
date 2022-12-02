@@ -45,7 +45,7 @@ const getMovieDetail = (req) => {
   const { id } = req.params;
   return new Promise((resolve, reject) => {
     const getMovieQuery =
-      "select movies.tittle,category.name,movies.duration_hour,movies.duration_minute,movies.director,movies.release_date,movies.cast_name,movies.synopsis,category_age.name,movies.image, from movies inner join category on movies.category_id = category.id inner join category_age on category_age.id = movies.category_age_id where movies.id = $1 and movies.deleted_at is null";
+      "select movies.tittle,category.name,movies.duration_hour,movies.duration_minute,movies.director,movies.release_date,movies.cast_name,movies.synopsis,category_age.name,movies.image from movies inner join category on movies.category_id = category.id inner join category_age on category_age.id = movies.category_age_id where movies.id = $1 and movies.deleted_at is null";
     db.query(getMovieQuery, [id], (error, result) => {
       if (error) {
         console.log(error);
