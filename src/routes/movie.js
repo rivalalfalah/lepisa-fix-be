@@ -5,5 +5,6 @@ const singleUpload = require("../middleware/uploadSingle");
 
 movieRouter.post("/add", singleUpload, cloudinary, movieController.createMovie);
 movieRouter.get("/:id", movieController.getMovieDetail);
+movieRouter.post("/schedule", movieController.addSchedule);
 
 module.exports = movieRouter;
