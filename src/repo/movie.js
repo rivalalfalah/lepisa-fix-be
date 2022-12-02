@@ -3,7 +3,8 @@ const db = require("../config/postgre");
 const createMovie = (req) => {
   return new Promise((resolve, reject) => {
     const { body } = req;
-    const image = req.file.secure_url;
+    console.log(req.file)
+    const image = req.file.url;
     const {
       tittle,
       category,
@@ -36,7 +37,7 @@ const createMovie = (req) => {
         console.log(error);
         return reject({ status: 500, msg: "Internal Server Error" });
       }
-      return resolve({ status: 201, msg: "movies created", data: result });
+      return resolve({ status: 201, msg: "movies created", data: result.rows[0] });
     });
   });
 };
@@ -64,7 +65,7 @@ const getMovieDetail = (req) => {
 const getMovieByDay = () => {
   return new Promise((resolve, reject) => {
     const getQuery =
-      "select movies.tittle,movies.image,category.name,extract(month from now()) as month_now,extract(year from now()) as year_now,extract(day from now()) as day_now,extract(day from movies.release_date) as day,extract(month from movies.release_date)+3 as month,extract(year from movies.release_date) as year from movies inner join category on movies.category_id = category.id where extract(year from now()) <= extract(year from movies.release_date) and extract(month from now()) = extract(month from movies.release_date) ";
+      "select movies.tittle,movies.image,category.name,extract(month from now()) as month_now,extract(year from now()) as year_now,extract(day from now()) as day_now,extract(day from movies.release_date) as day,extract(month from movies.release_date)+3 as month,extract(year from movies.release_date) as year from movies inner join category on movies.category_id = category.id where extract(year from now()) = extract(year from movies.release_date) and extract(month from now()) = extract(month from movies.release_date) ";
     db.query(getQuery, (error, result) => {
       if (error) {
         console.log(error);
@@ -103,11 +104,31 @@ const addSchedule = (req) => {
   });
 };
 
+const getMovieByMonth = (req) => {
+  return new Promise((resolve, reject) => {
+    const { month } = req.params;
+    const getQuery =
+      "select movies.tittle,movies.image,category.name from movies inner join category on movies.category_id = category.id where extract(year from now()) < extract(year from movies.release_date) and extract(month from now()) = $1 ";
+    db.query(getQuery, [month], (error, result) => {
+      if (error) {
+        console.log(error);
+        return reject({
+          status: 500,
+          msg: "internal server error",
+          error,
+        });
+      }
+      return resolve({ status: 200, data: result.rows });
+    });
+  });
+};
+
 const movieRepo = {
   createMovie,
   getMovieDetail,
   getMovieByDay,
   addSchedule,
+  getMovieByMonth
 };
 
 module.exports = movieRepo;

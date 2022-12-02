@@ -7,6 +7,7 @@ const createMovie = async (req, res) => {
     const response = await movieRepo.createMovie(req);
     resHelper.success(res, response.status, response);
   } catch (error) {
+    console.log(error)
     return resHelper.error(res, error.status, error);
   }
 };
@@ -39,11 +40,23 @@ const getMovieDay = async (req, res) => {
     return resHelper.error(res, error.status, error);
   }
 };
+
+const getMovieMonth = async (req, res) => {
+  try {
+    const response = await movieRepo.getMovieByDay(req);
+    resHelper.success(res, response.status, response);
+  } catch (error) {
+    console.log(error);
+    return resHelper.error(res, error.status, error);
+  }
+};
+
 const movieControllers = {
   createMovie,
   getMovieDetail,
   addSchedule,
-  getMovieDay
+  getMovieDay,
+  getMovieMonth
 };
 
 module.exports = movieControllers;
