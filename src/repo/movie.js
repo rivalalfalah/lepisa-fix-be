@@ -17,7 +17,7 @@ const createMovie = (req) => {
       category_age,
     } = body;
     const timeStamp = Date.now() / 1000;
-    const addMovieQuery = `insert into movies(tittle,category_id,duration_hour,duration_minute,director,release_date,cast_name,synopsis,image,category_age_id,created_at,update_at) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,to_timestamp($11),to_timestamp($12)) returning *`;
+    const addMovieQuery = `insert into movies(tittle,category_id,duration_hour,duration_minute,director,release_date,cast_name,synopsis,image,category_age_id,created_at,update_at) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,to_timestamp($11),to_timestamp($12)) returning id`;
     const addMovieValue = [
       tittle,
       category,
@@ -37,10 +37,24 @@ const createMovie = (req) => {
         console.log(error);
         return reject({ status: 500, msg: "Internal Server Error" });
       }
-      return resolve({
-        status: 201,
-        msg: "movies created",
-        data: result.rows[0],
+      const movieId = result.rows[0].id;
+      const { location, date, time, price } = body;
+      const addScheduleQuery = `insert into schedule(movie_id,location_id,date,time,price,created_at,updated_at) values($1,$2,$3,array[$4],$5,to_timestamp($6),to_timestamp($7)) returning *`;
+      const addScheduleValues = [
+        movieId,
+        location,
+        date,
+        time,
+        price,
+        timeStamp,
+        timeStamp,
+      ];
+      db.query(addScheduleQuery, addScheduleValues, (error, result) => {
+        if (error) {
+          console.log(error);
+          return reject({ status: 500, msg: "internal server error", error });
+        }
+        return resolve({ status: 201, data: result.rows[0] });
       });
     });
   });
@@ -84,30 +98,6 @@ const getMovieByDay = () => {
   });
 };
 
-const addSchedule = (req) => {
-  return new Promise((resolve, reject) => {
-    const { body } = req;
-    const { movie, cinema, location, date } = body;
-    const timestamp = Date.now() / 1000;
-    const addScheduleQuery = `insert into schedule(movie_id,cinema_id,location_id,date,created_at,updated_at) values($1,$2,$3,$4,to_timestamp($5),to_timestamp($6)) returning *`;
-    const addScheduleValues = [
-      movie,
-      cinema,
-      location,
-      date,
-      timestamp,
-      timestamp,
-    ];
-    db.query(addScheduleQuery, addScheduleValues, (error, result) => {
-      if (error) {
-        console.log(error);
-        return reject({ status: 500, msg: "internal server error", error });
-      }
-      return resolve({ status: 201, data: result });
-    });
-  });
-};
-
 const getMovieByMonth = (req) => {
   return new Promise((resolve, reject) => {
     const { month } = req.params;
@@ -127,12 +117,28 @@ const getMovieByMonth = (req) => {
   });
 };
 
+const getSchedule = () => {
+  return new Promise((resolve, reject) => {
+    const getQuery =
+      `select cinema.name,cinema.image,schedule.time,schedule.price,address.address_name from schedule inner join location on schedule.location_id = location.id inner join cinema on location.cinema_id = cinema.id inner join address on address.id = location.address_id`;
+    db.query(getQuery,[], (error, result) => {
+      if (error) {
+        console.log(error);
+        return reject({ status: 500, msg: "internal server error" });
+      }
+      return resolve({ status: 200, data: result.rows });
+    });
+  });
+};
+
+
+
 const movieRepo = {
   createMovie,
   getMovieDetail,
   getMovieByDay,
-  addSchedule,
   getMovieByMonth,
+  getSchedule
 };
 
 module.exports = movieRepo;
