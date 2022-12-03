@@ -41,10 +41,18 @@ const getMovieMonth = async (req, res) => {
   }
 };
 
-
 const getSchedule = async (req, res) => {
   try {
     const response = await movieRepo.getSchedule(req);
+    resHelper.success(res, response.status, response);
+  } catch (error) {
+    return resHelper.error(res, error.status, error);
+  }
+};
+
+const addSchedule = async (req, res) => {
+  try {
+    const response = await movieRepo.addSchedule(req);
     resHelper.success(res, response.status, response);
   } catch (error) {
     return resHelper.error(res, error.status, error);
@@ -56,7 +64,8 @@ const movieControllers = {
   getMovieDetail,
   getMovieDay,
   getMovieMonth,
-  getSchedule
+  getSchedule,
+  addSchedule
 };
 
 module.exports = movieControllers;
