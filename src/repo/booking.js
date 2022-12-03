@@ -4,7 +4,7 @@ const createBooking = (body, payment_id, user_id) => {
   return new Promise((resolve, reject) => {
     console.log(body);
     const query =
-      "insert into booking (schedule_id, user_id, total_ticket, time, total_payment, full_name, email, phone_number, payment_method_id, payment_id) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning id";
+      "insert into booking (schedule_id, user_id, total_ticket, time, total_payment, full_name, email, phone_number, payment_method_id, payment_id, booking_date) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) returning id";
 
     const {
       schedule_id,
@@ -15,6 +15,7 @@ const createBooking = (body, payment_id, user_id) => {
       email,
       phone_number,
       payment_method_id,
+      booking_date,
     } = body;
     postgreDb.query(
       query,
@@ -29,6 +30,7 @@ const createBooking = (body, payment_id, user_id) => {
         phone_number,
         payment_method_id,
         payment_id,
+        booking_date,
       ],
       (error, result) => {
         if (error) {
