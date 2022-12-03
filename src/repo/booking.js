@@ -70,11 +70,44 @@ const getPaymentMethod = (id) => {
   });
 };
 
-const updatePayment = (status, payment_id) => {
+const updatePayment = (status, status_ticket, payment_id) => {
   return new Promise((resolve, reject) => {
-    const query = "update booking set status = $1 where payment_id = $2";
+    const query =
+      "update booking set status = $1, status_ticket = $2 where payment_id = $3";
 
-    postgreDb.query(query, [status, payment_id], (error, result) => {
+    postgreDb.query(
+      query,
+      [status, status_ticket, payment_id],
+      (error, result) => {
+        if (error) {
+          console.log(error);
+          return reject(error);
+        }
+        resolve(result);
+      }
+    );
+  });
+};
+
+const getPointUser = (id) => {
+  return new Promise((resolve, reject) => {
+    const query = "select point from users where id = $1";
+
+    postgreDb.query(query, [id], (error, result) => {
+      if (error) {
+        console.log(error);
+        return reject(error);
+      }
+      resolve(result);
+    });
+  });
+};
+
+const updatePointUser = (id, point) => {
+  return new Promise((resolve, reject) => {
+    const query = "update users set point = $1 where id = $2";
+
+    postgreDb.query(query, [point, id], (error, result) => {
       if (error) {
         console.log(error);
         return reject(error);
@@ -88,7 +121,9 @@ const bookingRepo = {
   createBooking,
   createBookingSeat,
   getPaymentMethod,
-  updatePayment
+  updatePayment,
+  getPointUser,
+  updatePointUser,
 };
 
 module.exports = bookingRepo;

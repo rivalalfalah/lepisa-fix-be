@@ -76,15 +76,23 @@ const bookingController = {
         payment_id,
       };
 
+      const cekPoint = await bookingRepo.getPointUser(user_id);
+      const point = cekPoint.rows[0].point;
+      // console.log(point);
+
+      const updatePoint = point + (body.total_ticket * 50);
+      // console.log(updatePoint);
+      await bookingRepo.updatePointUser(user_id, updatePoint);
+
       const midtrans = await paymentMidtrans(
         body.total_payment,
         bank,
         payment_id
-      )
+      );
 
       return sendResponse.response(res, {
         status: 200,
-        data: {result, midtrans},
+        data: { result, midtrans },
         message: "Booking success.",
       });
     } catch (error) {
@@ -98,29 +106,31 @@ const bookingController = {
   },
 
   handlePayment: async (req, res) => {
-    const {order_id, transaction_status} = req.body;
+    const { order_id, transaction_status } = req.body;
     try {
       const status = transaction_status;
+      const status_ticket = "Active";
       const payment_id = order_id;
       const result = await bookingRepo.updatePayment(
         status,
+        status_ticket,
         payment_id
       );
-      
+
       return sendResponse.response(res, {
         status: 200,
         data: result,
         message: "Transaction success.",
       });
     } catch (error) {
-        console.log(error);
-        return sendResponse.response(res, {
-          error,
-          status: 500,
-          message: "Internal server error",
-        });
+      console.log(error);
+      return sendResponse.response(res, {
+        error,
+        status: 500,
+        message: "Internal server error",
+      });
     }
-  }
+  },
 };
 
 module.exports = bookingController;
