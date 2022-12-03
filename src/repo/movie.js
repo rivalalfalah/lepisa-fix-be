@@ -63,7 +63,7 @@ const getMovieDetail = (req) => {
   const { id } = req.params;
   return new Promise((resolve, reject) => {
     const getMovieQuery =
-      "select movies.tittle,category.name,movies.duration_hour,movies.duration_minute,movies.director,extract(day from movies.release_date) as day,extract(month from release_date) as month,extract(year from movies.release_date) as year,movies.cast_name,movies.synopsis,category_age.name,movies.image from movies inner join category on movies.category_id = category.id inner join category_age on category_age.id = movies.category_age_id where movies.id = $1 and movies.deleted_at is null";
+      "select movies.tittle,category.name as category,movies.duration_hour,movies.duration_minute,movies.director,extract(day from movies.release_date) as day,extract(month from release_date) as month,extract(year from movies.release_date) as year,movies.cast_name,movies.synopsis,category_age.name,movies.image from movies inner join category on movies.category_id = category.id inner join category_age on category_age.id = movies.category_age_id where movies.id = $1 and movies.deleted_at is null";
     db.query(getMovieQuery, [id], (error, result) => {
       if (error) {
         console.log(error);
@@ -116,11 +116,12 @@ const getMovieByMonth = (req) => {
   });
 };
 
-const getSchedule = () => {
+const getSchedule = (req) => {
   return new Promise((resolve, reject) => {
+    const {movie} = req.params
     const getQuery =
-      `select cinema.name,cinema.image,schedule.time,schedule.price,address.address_name from schedule inner join location on schedule.location_id = location.id inner join cinema on location.cinema_id = cinema.id inner join address on address.id = location.address_id`;
-    db.query(getQuery,[], (error, result) => {
+      `select movies.tittle,cinema.name,cinema.image,schedule.time,schedule.price,address.address_name from schedule inner join movies on movies.id = schedule.movie_id inner join location on schedule.location_id = location.id inner join cinema on location.cinema_id = cinema.id inner join address on address.id = location.address_id where movies.id = $1`;
+    db.query(getQuery,[movie], (error, result) => {
       if (error) {
         console.log(error);
         return reject({ status: 500, msg: "internal server error" });

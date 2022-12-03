@@ -7,6 +7,6 @@ movieRouter.post("/add", singleUpload, cloudinary, movieController.createMovie);
 movieRouter.get("/:id", movieController.getMovieDetail);
 movieRouter.get("/", movieController.getMovieDay);
 movieRouter.get("/film/:month", movieController.getMovieMonth);
-movieRouter.get("/schedule", movieController.getSchedule)
+movieRouter.get("/schedule/:movie", movieController.getSchedule)
 
 module.exports = movieRouter;
