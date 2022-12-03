@@ -44,7 +44,7 @@ module.exports = {
       console.log(fileTemplate);
 
       const mailOptions = {
-        from: '"Tickitz 👻" <dian30kartika@gmail.com>', // sender address
+        from: '"LEPISA 👻" <dian30kartika@gmail.com>', // sender address
         to: data.to, // list of receivers
         subject: data.subject, // Subject line
         html: mustache.render(fileTemplate, { ...data }),
