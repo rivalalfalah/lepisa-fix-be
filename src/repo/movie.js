@@ -39,12 +39,11 @@ const createMovie = (req) => {
       }
       const movieId = result.rows[0].id;
       const { location, date, time, price } = body;
-      const addScheduleQuery = `insert into schedule(movie_id,location_id,date,time,price,created_at,updated_at) values($1,$2,$3,array[$4],$5,to_timestamp($6),to_timestamp($7)) returning *`;
+      const addScheduleQuery = `insert into schedule(movie_id,location_id,date,time,price,created_at,updated_at) values($1,$2,$3,array[${time}],$4,to_timestamp($5),to_timestamp($6)) returning *`;
       const addScheduleValues = [
         movieId,
         location,
         date,
-        time,
         price,
         timeStamp,
         timeStamp,

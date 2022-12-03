@@ -4,7 +4,7 @@ const cloudinary = require("../middleware/cloudinary");
 const singleUpload = require("../middleware/uploadSingle");
 
 movieRouter.post("/add", singleUpload, cloudinary, movieController.createMovie);
-movieRouter.get("movie/:id", movieController.getMovieDetail);
+movieRouter.get("/:id", movieController.getMovieDetail);
 movieRouter.get("/", movieController.getMovieDay);
 movieRouter.get("/film/:month", movieController.getMovieMonth);
 movieRouter.get("/schedule", movieController.getSchedule)
