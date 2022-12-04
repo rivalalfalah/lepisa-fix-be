@@ -123,8 +123,9 @@ const updatePointUser = (id, point) => {
 const getTiketByPaymentId = (req) => {
   return new Promise((resolve, reject) => {
     const { payment_id } = req.params;
-    const getQuery = `select movies.tittle,schedule.date,category.name,schedule.price,seat.seat,category_age.name as age,booking.payment_id from booking inner join schedule on booking.schedule_id = schedule.id inner join movies on schedule.movie_id = movies.id inner join category on movies.category_id = category.id inner join category_age on movies.category_age_id = category_age.id inner join booking_seat on booking.id = booking_seat.booking_id inner join seat on booking_seat.seat_id = seat.id where booking.payment_id = $1`;
-    db.query(getQuery, [payment_id], (error, result) => {
+    const getQuery =
+      `select movies.tittle,schedule.date,category.name,schedule.price,seat.seat,category_age.name as age,booking.payment_id from booking inner join schedule on booking.schedule_id = schedule.id inner join movies on schedule.movie_id = movies.id inner join category on movies.category_id = category.id inner join category_age on movies.category_age_id = category_age.id inner join booking_seat on booking.id = booking_seat.booking_id inner join seat on booking_seat.seat_id = seat.id where booking.payment_id = $1`
+    db.query(getQuery,[payment_id] ,(error, result) => {
       if (error) {
         console.log(error);
         return reject({ status: 500, msg: "internal server error" });
@@ -134,16 +135,15 @@ const getTiketByPaymentId = (req) => {
   });
 };
 
-const getTiketByBookingId = (req) => {
+const updateStatusTicket = (id, data) => {
   return new Promise((resolve, reject) => {
-    const { booking_id } = req.params;
-    const getQuery = `select movies.tittle,schedule.date,category.name,schedule.price,seat.seat,category_age.name as age,booking.payment_id from booking inner join schedule on booking.schedule_id = schedule.id inner join movies on schedule.movie_id = movies.id inner join category on movies.category_id = category.id inner join category_age on movies.category_age_id = category_age.id inner join booking_seat on booking.id = booking_seat.booking_id inner join seat on booking_seat.seat_id = seat.id where booking.id = $1`;
-    db.query(getQuery, [booking_id], (error, result) => {
+    const query = "update booking set status_ticket where id = $1";
+    postgreDb.query(query, [data, id], (error, result) => {
       if (error) {
         console.log(error);
-        return reject({ status: 500, msg: "internal server error" });
+        return reject(error);
       }
-      resolve({ status: 200, data: result.rows });
+      resolve(result);
     });
   });
 };
@@ -155,8 +155,8 @@ const bookingRepo = {
   updatePayment,
   getPointUser,
   updatePointUser,
-  getTiketByBookingId,
-  getTiketByPaymentId
+  getTiketByPaymentId,
+  updateStatusTicket,
 };
 
 module.exports = bookingRepo;
