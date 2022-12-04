@@ -209,6 +209,16 @@ const bookingController = {
       sendResponse.error(res, error.status, error);
     }
   },
+
+  getSeat: async (req, res) => {
+    try {
+      const response = await bookingRepo.seatSold(req);
+      sendResponse.success(res, response.status, response);
+    } catch (error) {
+      console.log(error);
+      sendResponse.error(res, error.status, error);
+    }
+  },
 };
 
 module.exports = bookingController;
