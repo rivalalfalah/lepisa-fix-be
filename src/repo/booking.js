@@ -182,7 +182,7 @@ const getHistory = (id) => {
 
 const seatSold = (req) => {
   return new Promise((resolve, reject) => {
-    const { time, schedule } = req.body;
+    const { schedule, time } = req.query;
     const getQuery =
       "select booking_seat.seat_id from booking_seat inner join booking on booking.id = booking_seat.booking_id where booking.schedule_id = $1 and booking.time = $2";
     db.query(getQuery, [schedule, time], (error, result) => {
