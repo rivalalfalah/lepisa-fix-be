@@ -1,3 +1,4 @@
+const db = require("../config/postgre");
 const postgreDb = require("../config/postgre");
 
 const createBooking = (body, payment_id, user_id) => {
@@ -119,6 +120,21 @@ const updatePointUser = (id, point) => {
   });
 };
 
+const getTiket = (req) => {
+  return new Promise((resolve, reject) => {
+    const { payment_id } = req.params;
+    const getQuery =
+      `select movies.tittle,schedule.date,category.name,schedule.price,seat.seat,category_age.name as age,booking.payment_id from booking inner join schedule on booking.schedule_id = schedule.id inner join movies on schedule.movie_id = movies.id inner join category on movies.category_id = category.id inner join category_age on movies.category_age_id = category_age.id inner join booking_seat on booking.id = booking_seat.booking_id inner join seat on booking_seat.seat_id = seat.id where booking.payment_id = $1`
+    db.query(getQuery,[payment_id] ,(error, result) => {
+      if (error) {
+        console.log(error);
+        return reject({ status: 500, msg: "internal server error" });
+      }
+      resolve({ status: 200, data: result.rows });
+    });
+  });
+};
+
 const bookingRepo = {
   createBooking,
   createBookingSeat,
@@ -126,6 +142,7 @@ const bookingRepo = {
   updatePayment,
   getPointUser,
   updatePointUser,
+  getTiket,
 };
 
 module.exports = bookingRepo;

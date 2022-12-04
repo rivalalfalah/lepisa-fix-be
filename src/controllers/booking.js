@@ -81,7 +81,7 @@ const bookingController = {
       const point = cekPoint.rows[0].point;
       // console.log(point);
 
-      const updatePoint = point + (body.total_ticket * 50);
+      const updatePoint = point + body.total_ticket * 50;
       // console.log(updatePoint);
       await bookingRepo.updatePointUser(user_id, updatePoint);
 
@@ -130,6 +130,16 @@ const bookingController = {
         status: 500,
         message: "Internal server error",
       });
+    }
+  },
+
+  getTiket: async (req, res) => {
+    try {
+      const response = await bookingRepo.getTiket(req);
+      sendResponse.success(res, response.status, response);
+    } catch (error) {
+      console.log(error);
+      sendResponse.error(res, error.status, error);
     }
   },
 };
