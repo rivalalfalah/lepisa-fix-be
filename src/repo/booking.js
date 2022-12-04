@@ -137,8 +137,9 @@ const getTiketByPaymentId = (req) => {
 
 const updateStatusTicket = (id, data) => {
   return new Promise((resolve, reject) => {
-    const query = "update booking set status_ticket where id = $1";
-    postgreDb.query(query, [data, id], (error, result) => {
+    console.log("???????",data);
+    const query = "update booking set updated_at = $1, status_ticket = $2 where id = $3";
+    postgreDb.query(query, [data.updated_at, data.status_ticket, id], (error, result) => {
       if (error) {
         console.log(error);
         return reject(error);
@@ -149,11 +150,11 @@ const updateStatusTicket = (id, data) => {
 };
 
 
-const getTiketByBookingId = (req) => {
+const getTiketByBookingId = (id) => {
   return new Promise((resolve, reject) => {
-    const { id } = req.params;
+    // const { id } = req.params;
     const getQuery =
-      `select movies.tittle,schedule.date,category.name,schedule.price,seat.seat,category_age.name as age,booking.payment_id from booking inner join schedule on booking.schedule_id = schedule.id inner join movies on schedule.movie_id = movies.id inner join category on movies.category_id = category.id inner join category_age on movies.category_age_id = category_age.id inner join booking_seat on booking.id = booking_seat.booking_id inner join seat on booking_seat.seat_id = seat.id where booking.id = $1`
+      `select booking.id,movies.tittle,schedule.date,category.name,schedule.price,seat.seat,category_age.name as age,booking.payment_id, booking.status_ticket from booking inner join schedule on booking.schedule_id = schedule.id inner join movies on schedule.movie_id = movies.id inner join category on movies.category_id = category.id inner join category_age on movies.category_age_id = category_age.id inner join booking_seat on booking.id = booking_seat.booking_id inner join seat on booking_seat.seat_id = seat.id where booking.id = $1`
     db.query(getQuery,[id] ,(error, result) => {
       if (error) {
         console.log(error);

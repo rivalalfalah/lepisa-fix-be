@@ -145,11 +145,55 @@ const bookingController = {
 
   getTiketBooking: async (req, res) => {
     try {
-      const response = await bookingRepo.getTiketByBookingId(req);
+      const { id } = req.params;
+      console.log(id);
+      const response = await bookingRepo.getTiketByBookingId(id);
+      console.log(response.data);
       sendResponse.success(res, response.status, response);
     } catch (error) {
       console.log(error);
       sendResponse.error(res, error.status, error);
+    }
+  },
+
+  updateStatusTicket: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const checkBooking = await bookingRepo.getTiketByBookingId(id);
+      console.log(">>>>>>>>", checkBooking.data.length);
+
+      if (checkBooking.data.length < 1) {
+        return sendResponse.response(res, {
+          status: 404,
+          message: "Data not found",
+        });
+      }
+
+      const setData = {
+        status_ticket: "Used",
+        updated_at: new Date(Date.now()),
+      };
+
+      for (const data in setData) {
+        if (!setData[data]) {
+          delete setData[data];
+        }
+      }
+
+      const result = await bookingRepo.updateStatusTicket(id, setData);
+
+      return sendResponse.response(res, {
+        status: 200,
+        data: result.rows,
+        message: "Success use ticket!",
+      });
+    } catch (error) {
+      console.log(error);
+      return sendResponse.response(res, {
+        error,
+        status: 500,
+        message: "Internal server error",
+      });
     }
   },
 };
