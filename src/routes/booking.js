@@ -11,6 +11,6 @@ const {
 bookingRouter.post("/create-booking", isLogin, createBooking);
 bookingRouter.post("/handlemidtrans", handlePayment);
 bookingRouter.get("/ticket/:payment_id", getTiketPayment);
-bookingRouter.get("/ticketbooking/:booking_id" ,getTiketBooking)
+bookingRouter.get("/ticketbooking/:id" ,getTiketBooking)
 
 module.exports = bookingRouter;
