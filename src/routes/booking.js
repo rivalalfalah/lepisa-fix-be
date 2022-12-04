@@ -4,11 +4,13 @@ const { isLogin } = require("../middleware/isLogin");
 const {
   createBooking,
   handlePayment,
-  getTiket,
+  getTiketPayment,
+  getTiketBooking,
 } = require("../controllers/booking");
 
 bookingRouter.post("/create-booking", isLogin, createBooking);
 bookingRouter.post("/handlemidtrans", handlePayment);
-bookingRouter.get("/ticket/:payment_id", getTiket);
+bookingRouter.get("/ticket/:payment_id", getTiketPayment);
+bookingRouter.get("/ticketbooking/:booking_id" ,getTiketBooking)
 
 module.exports = bookingRouter;

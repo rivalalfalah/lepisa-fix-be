@@ -133,9 +133,19 @@ const bookingController = {
     }
   },
 
-  getTiket: async (req, res) => {
+  getTiketPayment: async (req, res) => {
     try {
-      const response = await bookingRepo.getTiket(req);
+      const response = await bookingRepo.getTiketByPaymentId(req);
+      sendResponse.success(res, response.status, response);
+    } catch (error) {
+      console.log(error);
+      sendResponse.error(res, error.status, error);
+    }
+  },
+
+  getTiketBooking: async (req, res) => {
+    try {
+      const response = await bookingRepo.getTiketByBookingId(req);
       sendResponse.success(res, response.status, response);
     } catch (error) {
       console.log(error);
