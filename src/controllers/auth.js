@@ -142,7 +142,7 @@ const auth = {
       if (checkPassword === false) {
         return sendResponse.response(res, {
           status: 401,
-          message: "Email is wrong.",
+          message: "Email/password is wrong.",
         });
       }
 
