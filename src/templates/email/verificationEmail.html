@@ -5,17 +5,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
-      h1 {
+      h2 {
         color: red;
+      }
+      button {
+        width: 150px;
+        height: 40px;
+        font-size: 14px;
+        text-align: center;
       }
     </style>
   </head>
   <body>
-    <h1>Hello {{name}} !</h1>
-    <h3> Please Click this link to verify your email.<h3>
-    <a href="{{buttonUrl}}"><button>Click here to verify !</button></a>
+    <h2>Hello {{name}} !</h2>
+    <p>Please Click this link to verify your email.</p>
+    <p>
+      <br />
+      <a href="{{buttonUrl}}"><button>Click here to verify !</button></a>
+      <br />
+      <br />
+    </p>
     <p><i>This is an automated email. Do not reply this email.</i></p>
-
-    
   </body>
 </html>
