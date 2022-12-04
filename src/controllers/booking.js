@@ -196,6 +196,19 @@ const bookingController = {
       });
     }
   },
+
+  getHistory: async (req, res) => {
+    try {
+      const { id } = req.userPayload;
+      console.log(id);
+      const response = await bookingRepo.getHistory(id);
+      console.log(response.data);
+      sendResponse.success(res, response.status, response);
+    } catch (error) {
+      console.log(error);
+      sendResponse.error(res, error.status, error);
+    }
+  },
 };
 
 module.exports = bookingController;
