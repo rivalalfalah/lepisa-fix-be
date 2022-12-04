@@ -28,9 +28,9 @@ const bookingController = {
   createBooking: async (req, res) => {
     try {
       const body = req.body;
-      console.log(body);
+      // console.log(body);
       const user_id = req.userPayload.id;
-      console.log(user_id);
+      // console.log(user_id);
       const payment_id = `LEPISA-${Math.floor(
         Math.random() * 100000000000000000000
       )}`;
@@ -58,7 +58,7 @@ const bookingController = {
       const payment_method = await bookingRepo.getPaymentMethod(
         body.payment_method_id
       );
-      console.log(payment_method.rows[0]);
+      // console.log(payment_method.rows[0]);
       const bank = payment_method.rows[0].name;
 
       const result = {
@@ -66,6 +66,7 @@ const bookingController = {
         user_id,
         booking_seat,
         schedule_id: body.schedule_id,
+        booking_date: body.booking_date,
         time: body.time,
         total_ticket: body.total_ticket,
         total_payment: body.total_paymnet,
