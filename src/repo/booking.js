@@ -124,7 +124,7 @@ const getTiketByPaymentId = (req) => {
   return new Promise((resolve, reject) => {
     const { payment_id } = req.params;
     const getQuery =
-      `select movies.tittle,extract(day from schedule.date),extract(month from schedule.date),extract(year from schedule.date),booking.time,booking.total_ticket,category.name,schedule.price,seat.seat,category_age.name as age,booking.payment_id from booking inner join schedule on booking.schedule_id = schedule.id inner join movies on schedule.movie_id = movies.id inner join category on movies.category_id = category.id inner join category_age on movies.category_age_id = category_age.id inner join booking_seat on booking.id = booking_seat.booking_id inner join seat on booking_seat.seat_id = seat.id where booking.payment_id = $1`
+      `select movies.tittle,extract(day from booking.date),extract(month from booking.date),extract(year from booking.date),booking.time,booking.total_ticket,category.name,schedule.price,seat.seat,category_age.name as age,booking.payment_id from booking inner join schedule on booking.schedule_id = schedule.id inner join movies on schedule.movie_id = movies.id inner join category on movies.category_id = category.id inner join category_age on movies.category_age_id = category_age.id inner join booking_seat on booking.id = booking_seat.booking_id inner join seat on booking_seat.seat_id = seat.id where booking.payment_id = $1`
     db.query(getQuery,[payment_id] ,(error, result) => {
       if (error) {
         console.log(error);
