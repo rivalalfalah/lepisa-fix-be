@@ -53,7 +53,7 @@ const createMovie = (req) => {
           console.log(error);
           return reject({ status: 500, msg: "internal server error", error });
         }
-        return resolve({ status: 201, data: result.rows[0] });
+        return resolve({ status: 201,msg:"movies created" ,data: result.rows[0] });
       });
     });
   });
@@ -119,7 +119,7 @@ const getMovieByMonth = (req) => {
 const getSchedule = (req) => {
   return new Promise((resolve, reject) => {
     const { movie } = req.params;
-    let getQuery = `select schedule.id as id,schedule.date,movies.tittle,cinema.name,cinema.image,schedule.time,schedule.price,address.address_name from schedule inner join movies on movies.id = schedule.movie_id inner join location on schedule.location_id = location.id inner join cinema on location.cinema_id = cinema.id inner join address on address.id = location.address_id where movies.id = $1`;
+    let getQuery = `select schedule.id as id,extract(day from schedule.date) as day,extract(month from schedule.date) as month,extract(year from schedule.date) as year,movies.tittle,cinema.name,cinema.image,schedule.time,schedule.price,address.address_name from schedule inner join movies on movies.id = schedule.movie_id inner join location on schedule.location_id = location.id inner join cinema on location.cinema_id = cinema.id inner join address on address.id = location.address_id where movies.id = $1`;
     if (req.query.date && req.query.location) {
       const date = req.query.date;
       const location = req.query.location;
