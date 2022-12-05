@@ -210,8 +210,9 @@ const getAllSeat = () => {
 
 const getPaymentStatus = (req) => {
   return new Promise((resolve, reject) => {
-    const payment = req.body.payment;
-    const getQuery = "select status,payment_id from booking where payment_id = $1";
+    const { payment } = req.params;
+    const getQuery =
+      "select status from booking where payment_id = $1";
     db.query(getQuery, [payment], (error, result) => {
       if (error) {
         console.log(error);

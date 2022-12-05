@@ -21,6 +21,6 @@ bookingRouter.patch("/status-ticket/:id", updateStatusTicket);
 bookingRouter.get("/history", isLogin, getHistory);
 bookingRouter.get("/seat", getSeat);
 bookingRouter.get("/allseat", getAllSeat);
-bookingRouter.get("/status", getStatus);
+bookingRouter.get("/status/:payment", getStatus);
 
 module.exports = bookingRouter;
