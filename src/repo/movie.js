@@ -123,47 +123,17 @@ const getMovieByMonth = (req) => {
 const getSchedule = (req) => {
   return new Promise((resolve, reject) => {
     const { movie } = req.params;
+    const { date, location } = req.query;
     let getQuery = `select schedule.id as id,extract(day from schedule.date) as day,extract(month from schedule.date) as month,extract(year from schedule.date) as year,movies.tittle,cinema.name,cinema.image,schedule.time,schedule.price,address.address_name from schedule inner join movies on movies.id = schedule.movie_id inner join location on schedule.location_id = location.id inner join cinema on location.cinema_id = cinema.id inner join address on address.id = location.address_id where movies.id = $1`;
     console.log(req.query.date);
     console.log(req.query.location);
-    if (req.query.date !== "" && req.query.location !== "") {
-      const date = req.query.date;
-      const location = req.query.location;
-      getQuery += `and schedule.date = $2 and address.city_id = $3`;
-      console.log(getQuery);
-      db.query(getQuery, [movie, date, location], (error, result) => {
-        if (error) {
-          console.log(error);
-          return reject({ status: 500, msg: "internal server error" });
-        }
-        return resolve({ status: 200, data: result.rows });
-      });
+    if (date) {
+      getQuery += ` and schedule.date = '${date}'`;
     }
-    if (req.query.date !== "") {
-      const date = req.query.date;
-      getQuery += ` and schedule.date = $2`;
-      console.log(getQuery);
-      db.query(getQuery, [movie, date], (error, result) => {
-        if (error) {
-          console.log(error);
-          return reject({ status: 500, msg: "internal server error" });
-        }
-        return resolve({ status: 200, data: result.rows });
-      });
+    if (location) {
+      getQuery += ` and schedule.location_id = '${location}'`;
     }
-    if (req.query.location !== "") {
-      const location = req.query.location;
-      getQuery += ` and address.city_id = $2`;
-      console.log(getQuery);
-      db.query(getQuery, [movie, location], (error, result) => {
-        if (error) {
-          console.log(error);
-          return reject({ status: 500, msg: "internal server error" });
-        }
-        return resolve({ status: 200, data: result.rows });
-      });
-    }
-
+    console.log(getQuery);
     db.query(getQuery, [movie], (error, result) => {
       if (error) {
         console.log(error);
