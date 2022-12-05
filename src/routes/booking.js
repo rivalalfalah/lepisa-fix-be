@@ -9,6 +9,7 @@ const {
   updateStatusTicket,
   getHistory,
   getSeat,
+  getAllSeat,
 } = require("../controllers/booking");
 
 bookingRouter.post("/create-booking", isLogin, createBooking);
@@ -18,5 +19,6 @@ bookingRouter.get("/ticketbooking/:id", getTiketBooking);
 bookingRouter.patch("/status-ticket/:id", updateStatusTicket);
 bookingRouter.get("/history", isLogin, getHistory);
 bookingRouter.get("/seat", getSeat);
+bookingRouter.get("/allseat", getAllSeat);
 
 module.exports = bookingRouter;

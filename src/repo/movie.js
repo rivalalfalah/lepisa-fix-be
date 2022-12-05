@@ -53,7 +53,11 @@ const createMovie = (req) => {
           console.log(error);
           return reject({ status: 500, msg: "internal server error", error });
         }
-        return resolve({ status: 201,msg:"movies created" ,data: result.rows[0] });
+        return resolve({
+          status: 201,
+          msg: "movies created",
+          data: result.rows[0],
+        });
       });
     });
   });

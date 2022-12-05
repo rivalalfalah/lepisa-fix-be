@@ -194,6 +194,19 @@ const seatSold = (req) => {
     });
   });
 };
+
+const getAllSeat = () => {
+  return new Promise((resolve, reject) => {
+    const getQuery = "select id,seat from seat"
+    db.query(getQuery,(error,result)=> {
+      if (error) {
+        console.log(error)
+        return reject({status:500,msg:"internal server error"})
+      }
+      return resolve({status:200,data:result.rows})
+    })
+  });
+};
 const bookingRepo = {
   createBooking,
   createBookingSeat,
@@ -206,6 +219,7 @@ const bookingRepo = {
   getTiketByBookingId,
   getHistory,
   seatSold,
+  getAllSeat
 };
 
 module.exports = bookingRepo;
