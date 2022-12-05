@@ -197,14 +197,28 @@ const seatSold = (req) => {
 
 const getAllSeat = () => {
   return new Promise((resolve, reject) => {
-    const getQuery = "select id,seat from seat"
-    db.query(getQuery,(error,result)=> {
+    const getQuery = "select id,seat from seat";
+    db.query(getQuery, (error, result) => {
       if (error) {
-        console.log(error)
-        return reject({status:500,msg:"internal server error"})
+        console.log(error);
+        return reject({ status: 500, msg: "internal server error" });
       }
-      return resolve({status:200,data:result.rows})
-    })
+      return resolve({ status: 200, data: result.rows });
+    });
+  });
+};
+
+const getPaymentStatus = (req) => {
+  return new Promise((resolve, reject) => {
+    const payment = req.body.payment;
+    const getQuery = "select status,payment_id from booking where payment_id = $1";
+    db.query(getQuery, [payment], (error, result) => {
+      if (error) {
+        console.log(error);
+        return reject({ status: 500, msg: "internal server error" });
+      }
+      return resolve({ status: 200, data: result.rows[0] });
+    });
   });
 };
 const bookingRepo = {
@@ -219,7 +233,8 @@ const bookingRepo = {
   getTiketByBookingId,
   getHistory,
   seatSold,
-  getAllSeat
+  getAllSeat,
+  getPaymentStatus,
 };
 
 module.exports = bookingRepo;

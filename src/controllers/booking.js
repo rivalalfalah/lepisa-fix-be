@@ -229,6 +229,15 @@ const bookingController = {
       sendResponse.error(res, error.status, error);
     }
   },
+  getStatus: async (req, res) => {
+    try {
+      const response = await bookingRepo.getPaymentStatus(req);
+      sendResponse.success(res, response.status, response);
+    } catch (error) {
+      console.log(error);
+      sendResponse.error(res, error.status, error);
+    }
+  },
 };
 
 module.exports = bookingController;
