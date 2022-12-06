@@ -169,7 +169,7 @@ const getTiketByBookingId = (id) => {
 
 const getHistory = (id) => {
   return new Promise((resolve, reject) => {
-    const getQuery = `select booking.id,movies.tittle,cinema.image,extract(day from schedule.date) as day,extract(month from schedule.date) as month,extract(year from schedule.date) as year,schedule.price,seat.seat,booking.payment_id,booking.status_ticket from booking inner join schedule on booking.schedule_id = schedule.id inner join movies on schedule.movie_id = movies.id inner join category on movies.category_id = category.id inner join location on schedule.location_id = location.id inner join cinema on location.cinema_id = cinema.id inner join booking_seat on booking.id = booking_seat.booking_id inner join seat on booking_seat.seat_id = seat.id where booking.id = $1 and booking.status = 'settlement'`;
+    const getQuery = `select booking.id,movies.tittle,cinema.image,extract(day from schedule.date) as day,extract(month from schedule.date) as month,extract(year from schedule.date) as year,schedule.price,seat.seat,booking.payment_id,booking.status_ticket from booking inner join schedule on booking.schedule_id = schedule.id inner join movies on schedule.movie_id = movies.id inner join category on movies.category_id = category.id inner join location on schedule.location_id = location.id inner join cinema on location.cinema_id = cinema.id inner join booking_seat on booking.id = booking_seat.booking_id inner join seat on booking_seat.seat_id = seat.id where booking.id = $1`;
     db.query(getQuery, [id], (error, result) => {
       if (error) {
         console.log(error);
